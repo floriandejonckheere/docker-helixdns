@@ -11,7 +11,7 @@
 
 
 # Etcd root namespace, no trailing slash
-ROOT="/helix/be/thalarion/services"
+ROOT="/helix${ROOT_DOMAIN:-/io/docker}"
 # Etcd address
 ETCD="http://172.17.42.1:4001"
 
