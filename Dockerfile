@@ -14,11 +14,11 @@ ENV GOPATH /usr/local/go
 ENV GOBIN /usr/local/go/bin
 ENV PATH $PATH:$GOBIN
 
-ADD start.sh /app/start.sh
-ADD helixwatch.sh /app/helixwatch.sh
-
 RUN go get github.com/mrwilson/helixdns
 RUN go install github.com/mrwilson/helixdns
+
+ADD start.sh /app/start.sh
+ADD helixwatch.sh /app/helixwatch.sh
 
 EXPOSE 53
 
