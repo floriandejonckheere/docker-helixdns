@@ -35,18 +35,20 @@ function update_all_records() {
 function update_record() {
 	NAME=$(docker inspect --format='{{.Name}}' ${CONTAINER})
 	IP=$(docker inspect --format='{{.NetworkSettings.IPAddress}}' ${CONTAINER})
-	echo "$(date +'%Y/%m/%d %H:%M:%S') Setting ${ROOT}${NAME} to ${IP}"
+	echo "$(date +'%Y/%m/%d %H:%M:%S') ${ROOT}${NAME} <=> ${IP}"
 	curl -s -L "${ETCD}/v2/keys${ROOT}${NAME}/A" -XPUT -d value="${IP}" > /dev/null
 	ARPA="$(echo ${IP} | sed -e 's/\([0-9]*\).\([0-9]*\).\([0-9]*\).\([0-9]*\)/\1\/\2\/\3\/\4/g')"
-	echo "$(date +'%Y/%m/%d %H:%M:%S') Setting ${ARPA} to ${NAME:1}.${ROOT_DOMAIN}"
 	curl -s -L "${ETCD}/v2/keys${HELIX}/arpa/in-addr/${ARPA}/PTR" -XPUT -d value="${NAME:1}.${ROOT_DOMAIN}." > /dev/null
 }
 
 # Remove a record
 function remove_record() {
 	NAME=$(docker inspect --format='{{.Name}}' ${CONTAINER})
-	echo "[$(date +'%Y/%m/%d %H:%M:%S')] Removing ${ROOT}${NAME}"
+	IP=$(docker inspect --format='{{.NetworkSettings.IPAddress}}' ${CONTAINER})
+	echo "$(date +'%Y/%m/%d %H:%M:%S') Removing ${ROOT}${NAME}"
 	curl -s -L "${ETCD}/v2/keys${ROOT}${NAME}" -XDELETE > /dev/null
+	ARPA="$(echo ${IP} | sed -e 's/\([0-9]*\).\([0-9]*\).\([0-9]*\).\([0-9]*\)/\1\/\2\/\3\/\4/g')"
+	curl -s -L "${ETCD}/v2/keys${HELIX}/arpa/in-addr/${ARPA}/PTR" -XDELETE > /dev/null
 }
 
 # Watch function

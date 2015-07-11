@@ -1,0 +1,19 @@
+[Unit]
+Description=HelixDNS container
+Requires=docker.service
+After=docker.service
+
+[Service]
+TimeoutStartSec=0
+Restart=always
+RestartSec=10s
+ExecStartPre=-/bin/docker stop helixdns
+ExecStartPre=-/bin/docker rm helixdns
+ExecStartPre=-/bin/docker pull thalarion/helixdns
+ExecStart=/data/helixdns/run.sh
+
+[Install]
+WantedBy=multi-user.target
+
+[X-Fleet]
+MachineID=8e6431c045c04771868d64643ff133c8

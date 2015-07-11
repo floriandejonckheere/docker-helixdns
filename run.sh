@@ -1,6 +1,6 @@
 #!/bin/bash
 
-docker run -d --name helixdns \
+docker run $@ --name helixdns \
 	--restart=always \
 	-e 'ROOT_DOMAIN=services.thalarion.be' \
 	-e 'NAMESPACE=/be/thalarion/services' \
